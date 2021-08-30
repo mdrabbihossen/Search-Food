@@ -1,4 +1,4 @@
-const searchFood = () => {
+const searchFood = async () => {
   const searchField = document.getElementById("search-field");
   const searchText = searchField.value;
   console.log(searchText);
@@ -9,9 +9,13 @@ const searchFood = () => {
     alert("Oops 😐 you can't write anything");
   } else {
     const url = `https://www.themealdb.com/api/json/v1/1/search.php?s=${searchText}`;
-    fetch(url)
-      .then((res) => res.json())
-      .then((data) => displaySearchResults(data.meals));
+    // fetch(url)
+    //   .then((res) => res.json())
+    //   .then((data) => displaySearchResults(data.meals));
+
+    const response = await fetch(url);
+    const data = await response.json();
+    displaySearchResults(data.meals);
   }
 };
 
@@ -50,13 +54,17 @@ const displaySearchResults = (meals) => {
   }
 };
 
-const loadMealDetail = (mealID) => {
+const loadMealDetail = async (mealID) => {
   // console.log(mealID);
 
   const url = `https://www.themealdb.com/api/json/v1/1/lookup.php?i=${mealID}`;
-  fetch(url)
-    .then((res) => res.json())
-    .then((data) => displayMealDetail(data.meals[0]));
+  // fetch(url)
+  //   .then((res) => res.json())
+  //   .then((data) => displayMealDetail(data.meals[0]));
+
+  const res = await fetch(url);
+  const data = await res.json();
+  displayMealDetail(data.meals[0]);
 };
 
 const displayMealDetail = (meal) => {
