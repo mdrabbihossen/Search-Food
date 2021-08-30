@@ -2,20 +2,35 @@ const searchFood = () => {
   const searchField = document.getElementById("search-field");
   const searchText = searchField.value;
   console.log(searchText);
+
+  // clear data
   searchField.value = "";
-  const url = `https://www.themealdb.com/api/json/v1/1/search.php?s=${searchText}`;
-  fetch(url)
-    .then((res) => res.json())
-    .then((data) => displaySearchResults(data.meals));
+  if (searchText == "") {
+    alert("Oops 😐 you can't write anything");
+  } else {
+    const url = `https://www.themealdb.com/api/json/v1/1/search.php?s=${searchText}`;
+    fetch(url)
+      .then((res) => res.json())
+      .then((data) => displaySearchResults(data.meals));
+  }
 };
 
 const displaySearchResults = (meals) => {
   const searchResults = document.getElementById("search-results");
-  meals.forEach((meal) => {
-    // console.log(meal);
-    const div = document.createElement("div");
-    div.classList.add("col");
-    div.innerHTML = `
+  searchResults.textContent = "";
+
+  const empty = document.getElementById("empty-message");
+
+  // console.log(meals);
+  if (meals == null) {
+    empty.innerText = "Ahhh!! 😐 No food found 🥺 try something Yummy 😋 ";
+  } else {
+    empty.textContent = "";
+    meals.forEach((meal) => {
+      // console.log(meal);
+      const div = document.createElement("div");
+      div.classList.add("col");
+      div.innerHTML = `
     <div onclick="loadMealDetail(${meal.idMeal})" class="card h-100">
         <img src="${meal.strMealThumb}" class="card-img-top" >
         <div class="card-body">
@@ -27,11 +42,12 @@ const displaySearchResults = (meals) => {
         
          <li style="display-flex"> ${meal.strTags} </li>
         </div> 
+      </div>
     </div>
-  </div>
     `;
-    searchResults.appendChild(div);
-  });
+      searchResults.appendChild(div);
+    });
+  }
 };
 
 const loadMealDetail = (mealID) => {
